@@ -1,8 +1,6 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
-// Import icons
 import { 
   Home,
   Users,
@@ -10,7 +8,8 @@ import {
   User,
   CreditCard,
   Settings,
-  Shield
+  Shield,
+  FileText
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -29,6 +28,7 @@ const navItems: NavItem[] = [
   { title: 'Bookings', icon: Calendar, path: '/bookings' },
   { title: 'Passengers', icon: User, path: '/passengers' },
   { title: 'Payments', icon: CreditCard, path: '/payments' },
+  { title: 'Markup Management', icon: FileText, path: '/manage-markup' },
   { title: 'User Management', icon: Users, path: '/users' },
   { title: 'Roles & Permissions', icon: Shield, path: '/roles' },
   { title: 'Settings', icon: Settings, path: '/settings' },
