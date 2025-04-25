@@ -1,6 +1,20 @@
+
 import React, { useState } from 'react';
-import { Dialog } from "@/components/ui/dialog";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle 
+} from "@/components/ui/dialog";
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { AgentMarkupDetails } from '@/components/markup/AgentMarkupDetails';
 import { MarkupTable } from '@/components/markup/MarkupTable';
 

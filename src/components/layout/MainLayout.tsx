@@ -1,20 +1,4 @@
-
-import React, { useState } from 'react';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarProvider,
-  SidebarTrigger
-} from '@/components/ui/sidebar';
-import { TopBar } from './TopBar';
+import React from 'react';
 import { 
   LayoutDashboard, 
   Users, 
@@ -22,9 +6,23 @@ import {
   Calendar, 
   CreditCard, 
   Shield, 
-  Settings 
+  Settings,
+  FileText 
 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider
+} from '@/components/ui/sidebar';
+import { TopBar } from './TopBar';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -39,6 +37,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     { title: 'Passengers', icon: User, path: '/passengers' },
     { title: 'Bookings', icon: Calendar, path: '/bookings' },
     { title: 'Payments', icon: CreditCard, path: '/payments' },
+    { title: 'Markup Management', icon: FileText, path: '/manage-markup' },
     { title: 'User Management', icon: Users, path: '/users' },
     { title: 'Roles & Permissions', icon: Shield, path: '/roles' },
     { title: 'Settings', icon: Settings, path: '/settings' },
