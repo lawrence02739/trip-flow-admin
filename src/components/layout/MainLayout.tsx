@@ -18,11 +18,11 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
-  SidebarHeader  // Added this import
+  SidebarProvider
 } from '@/components/ui/sidebar';
 import { TopBar } from './TopBar';
 
