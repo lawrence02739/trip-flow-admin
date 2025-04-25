@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -72,6 +71,11 @@ export default {
 				'travel-info': '#3498DB',
 				'travel-gray': '#ECF0F1',
 				'travel-dark': '#2C3E50',
+				'markup-primary': '#2A5C8C',
+				'markup-secondary': '#3AAFA9',
+				'markup-success': '#2ECC71',
+				'markup-error': '#E74C3C',
+				'markup-warning': '#F39C12',
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif'],

@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { Dashboard } from './Dashboard';
+import ManageMarkup from './ManageMarkup';
 
 const Index: React.FC = () => {
-  return <Dashboard />;
+  return <ManageMarkup />;
 };
 
 export default Index;
