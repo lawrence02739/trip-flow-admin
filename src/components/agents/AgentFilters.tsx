@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Badge } from "@/components/ui/badge";
 
 interface AgentFiltersProps {
   onSearch: (query: string) => void;
@@ -111,18 +112,17 @@ export const AgentFilters: React.FC<AgentFiltersProps> = ({
           <label className="text-sm font-medium mb-1 block">Agent Status</label>
           <div className="flex flex-wrap gap-2">
             {statusOptions.map(option => (
-              <Button
+              <Badge
                 key={option.value}
                 variant={selectedStatuses.includes(option.value) ? "default" : "outline"}
-                size="sm"
+                className="cursor-pointer flex items-center gap-1 px-3 py-1"
                 onClick={() => toggleStatus(option.value)}
-                className="flex items-center gap-1"
               >
                 {option.label}
                 {selectedStatuses.includes(option.value) && (
-                  <X className="h-3 w-3" />
+                  <X className="h-3 w-3 ml-1" />
                 )}
-              </Button>
+              </Badge>
             ))}
           </div>
         </div>
@@ -131,18 +131,17 @@ export const AgentFilters: React.FC<AgentFiltersProps> = ({
           <label className="text-sm font-medium mb-1 block">KYC Status</label>
           <div className="flex flex-wrap gap-2">
             {kycStatusOptions.map(option => (
-              <Button
+              <Badge
                 key={option.value}
                 variant={selectedKycStatuses.includes(option.value) ? "default" : "outline"}
-                size="sm"
+                className="cursor-pointer flex items-center gap-1 px-3 py-1"
                 onClick={() => toggleKycStatus(option.value)}
-                className="flex items-center gap-1"
               >
                 {option.label}
                 {selectedKycStatuses.includes(option.value) && (
-                  <X className="h-3 w-3" />
+                  <X className="h-3 w-3 ml-1" />
                 )}
-              </Button>
+              </Badge>
             ))}
           </div>
         </div>

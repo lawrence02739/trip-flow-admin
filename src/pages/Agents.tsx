@@ -15,6 +15,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Enhanced sample data with new fields
 const sampleAgents = [
@@ -95,6 +102,18 @@ export const Agents: React.FC = () => {
   const [filteredAgents, setFilteredAgents] = useState(sampleAgents);
   const [showAddAgentModal, setShowAddAgentModal] = useState(false);
   const { toast } = useToast();
+  
+  // Form state for new agent
+  const [newAgent, setNewAgent] = useState({
+    name: '',
+    username: '',
+    email: '',
+    phone: '',
+    location: 'New York',
+    commissionRate: 15,
+    kycStatus: 'requested' as 'requested' | 'verified' | 'completed',
+    status: 'active' as 'active' | 'inactive'
+  });
 
   const handleSearch = (query: string) => {
     if (!query) {
@@ -176,11 +195,60 @@ export const Agents: React.FC = () => {
 
   const handleAddAgent = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Generate a new ID
+    const newId = `${agents.length + 1}`;
+    const userId = `USR-${String(agents.length + 1).padStart(3, '0')}`;
+    
+    // Create new agent object
+    const agentToAdd = {
+      id: newId,
+      userId,
+      ...newAgent,
+      bookings: 0,
+      revenue: 0
+    };
+    
+    // Add to state
+    const updatedAgents = [...agents, agentToAdd];
+    setAgents(updatedAgents);
+    setFilteredAgents(updatedAgents);
+    
+    // Show success notification
     toast({
       title: "New Agent Added",
       description: "The new agent has been successfully created.",
     });
+    
+    // Reset form and close modal
+    setNewAgent({
+      name: '',
+      username: '',
+      email: '',
+      phone: '',
+      location: 'New York',
+      commissionRate: 15,
+      kycStatus: 'requested',
+      status: 'active'
+    });
     setShowAddAgentModal(false);
+  };
+  
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { id, value } = e.target;
+    setNewAgent(prev => ({
+      ...prev,
+      [id]: id === 'commissionRate' ? Number(value) : value
+    }));
+  };
+  
+  const handleSelectChange = (field: string, value: string) => {
+    setNewAgent(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   return (
@@ -189,12 +257,12 @@ export const Agents: React.FC = () => {
         <h1 className="text-2xl font-bold">Agent Management</h1>
         <Dialog open={showAddAgentModal} onOpenChange={setShowAddAgentModal}>
           <DialogTrigger asChild>
-            <Button>
+            <Button variant="default" className="shadow-md hover:shadow-lg transition-shadow">
               <Plus className="h-4 w-4 mr-2" />
               Add Agent
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Add New Agent</DialogTitle>
               <DialogDescription>
@@ -205,38 +273,117 @@ export const Agents: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" placeholder="John Doe" required />
+                  <Input 
+                    id="name" 
+                    placeholder="John Doe" 
+                    value={newAgent.name}
+                    onChange={handleInputChange}
+                    required 
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="username">Username</Label>
-                  <Input id="username" placeholder="johndoe" required />
+                  <Input 
+                    id="username" 
+                    placeholder="johndoe" 
+                    value={newAgent.username}
+                    onChange={handleInputChange}
+                    required 
+                  />
                 </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="john@example.com" required />
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="john@example.com" 
+                    value={newAgent.email}
+                    onChange={handleInputChange}
+                    required 
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" placeholder="+1234567890" required />
+                  <Input 
+                    id="phone" 
+                    placeholder="+1234567890" 
+                    value={newAgent.phone}
+                    onChange={handleInputChange}
+                    required 
+                  />
                 </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="location">Location</Label>
-                  <select id="location" className="w-full h-10 px-3 rounded-md border border-input">
-                    <option value="New York">New York</option>
-                    <option value="London">London</option>
-                    <option value="Tokyo">Tokyo</option>
-                    <option value="Sydney">Sydney</option>
-                  </select>
+                  <Select 
+                    value={newAgent.location}
+                    onValueChange={(value) => handleSelectChange('location', value)}
+                  >
+                    <SelectTrigger id="location">
+                      <SelectValue placeholder="Select location" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="New York">New York</SelectItem>
+                      <SelectItem value="London">London</SelectItem>
+                      <SelectItem value="Tokyo">Tokyo</SelectItem>
+                      <SelectItem value="Sydney">Sydney</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="commission">Commission Rate (%)</Label>
-                  <Input id="commission" type="number" min="0" max="100" placeholder="15" required />
+                  <Label htmlFor="commissionRate">Commission Rate (%)</Label>
+                  <Input 
+                    id="commissionRate"
+                    type="number" 
+                    min="0" 
+                    max="100" 
+                    value={newAgent.commissionRate}
+                    onChange={handleInputChange}
+                    required 
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="kycStatus">KYC Status</Label>
+                  <Select 
+                    value={newAgent.kycStatus}
+                    onValueChange={(value: 'requested' | 'verified' | 'completed') => 
+                      handleSelectChange('kycStatus', value)
+                    }
+                  >
+                    <SelectTrigger id="kycStatus">
+                      <SelectValue placeholder="Select KYC status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="requested">Requested</SelectItem>
+                      <SelectItem value="verified">Verified</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="status">Status</Label>
+                  <Select 
+                    value={newAgent.status}
+                    onValueChange={(value: 'active' | 'inactive') => 
+                      handleSelectChange('status', value)
+                    }
+                  >
+                    <SelectTrigger id="status">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="inactive">Inactive</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               

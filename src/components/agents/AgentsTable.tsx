@@ -10,7 +10,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Edit, Trash, ChevronDown, ChevronUp } from 'lucide-react';
+import { MoreHorizontal, Edit, Trash, ChevronDown, ChevronUp, Eye } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +28,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Badge } from "@/components/ui/badge";
 
 interface Agent {
   id: string;
@@ -121,6 +122,30 @@ export const AgentsTable: React.FC<AgentsTableProps> = ({
     return sortDirection === 'asc' ? <ChevronUp className="h-4 w-4 ml-1" /> : <ChevronDown className="h-4 w-4 ml-1" />;
   };
 
+  // KYC Status Badge Component
+  const KycStatusBadge = ({ status }: { status: Agent['kycStatus'] }) => {
+    const variants = {
+      completed: "bg-green-100 text-green-700",
+      verified: "bg-blue-100 text-blue-700",
+      requested: "bg-amber-100 text-amber-700",
+    };
+    
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${variants[status]}`}>
+        {status.charAt(0).toUpperCase() + status.slice(1)}
+      </span>
+    );
+  };
+
+  // Status Badge Component
+  const StatusBadge = ({ status }: { status: Agent['status'] }) => {
+    return (
+      <Badge variant={status === 'active' ? "success" : "destructive"}>
+        {status === 'active' ? 'Active' : 'Inactive'}
+      </Badge>
+    );
+  };
+
   return (
     <div className="table-container space-y-4">
       <div className="flex justify-end mb-4">
@@ -138,139 +163,134 @@ export const AgentsTable: React.FC<AgentsTableProps> = ({
         </select>
       </div>
 
-      <Table>
-        <TableCaption>A list of all travel agents.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead 
-              className="cursor-pointer"
-              onClick={() => handleSort('userId')}
-            >
-              <div className="flex items-center">
-                UserID
-                <SortIndicator column="userId" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="cursor-pointer"
-              onClick={() => handleSort('name')}
-            >
-              <div className="flex items-center">
-                Name
-                <SortIndicator column="name" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="cursor-pointer"
-              onClick={() => handleSort('username')}
-            >
-              <div className="flex items-center">
-                Username
-                <SortIndicator column="username" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="cursor-pointer"
-              onClick={() => handleSort('email')}
-            >
-              <div className="flex items-center">
-                Email
-                <SortIndicator column="email" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="cursor-pointer"
-              onClick={() => handleSort('phone')}
-            >
-              <div className="flex items-center">
-                Phone
-                <SortIndicator column="phone" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="cursor-pointer"
-              onClick={() => handleSort('commissionRate')}
-            >
-              <div className="flex items-center">
-                Commission Rate
-                <SortIndicator column="commissionRate" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="cursor-pointer"
-              onClick={() => handleSort('kycStatus')}
-            >
-              <div className="flex items-center">
-                KYC Status
-                <SortIndicator column="kycStatus" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="cursor-pointer"
-              onClick={() => handleSort('status')}
-            >
-              <div className="flex items-center">
-                Status
-                <SortIndicator column="status" />
-              </div>
-            </TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {currentAgents.map((agent) => (
-            <TableRow key={agent.id} className="hover:bg-muted/50">
-              <TableCell>{agent.userId}</TableCell>
-              <TableCell className="font-medium">{agent.name}</TableCell>
-              <TableCell>{agent.username}</TableCell>
-              <TableCell>{agent.email}</TableCell>
-              <TableCell>{agent.phone}</TableCell>
-              <TableCell>{agent.commissionRate}%</TableCell>
-              <TableCell>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  agent.kycStatus === 'completed' ? 'bg-green-100 text-green-700' : 
-                  agent.kycStatus === 'verified' ? 'bg-blue-100 text-blue-700' : 
-                  'bg-amber-100 text-amber-700'
-                }`}>
-                  {agent.kycStatus.charAt(0).toUpperCase() + agent.kycStatus.slice(1)}
-                </span>
-              </TableCell>
-              <TableCell>
-                <span className={agent.status === 'active' ? 'status-badge-success' : 'status-badge-error'}>
-                  {agent.status === 'active' ? 'Active' : 'Inactive'}
-                </span>
-              </TableCell>
-              <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => onView(agent.id)}>
-                      View details
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onEdit(agent.id)}>
-                      <Edit className="mr-2 h-4 w-4" />
-                      Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => onDelete(agent.id)}
-                      className="text-destructive focus:text-destructive"
-                    >
-                      <Trash className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
+      <div className="rounded-md border overflow-hidden">
+        <Table>
+          <TableCaption>A list of all travel agents.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead 
+                className="cursor-pointer whitespace-nowrap"
+                onClick={() => handleSort('userId')}
+              >
+                <div className="flex items-center">
+                  UserID
+                  <SortIndicator column="userId" />
+                </div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer whitespace-nowrap"
+                onClick={() => handleSort('name')}
+              >
+                <div className="flex items-center">
+                  Name
+                  <SortIndicator column="name" />
+                </div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer whitespace-nowrap"
+                onClick={() => handleSort('username')}
+              >
+                <div className="flex items-center">
+                  Username
+                  <SortIndicator column="username" />
+                </div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer whitespace-nowrap"
+                onClick={() => handleSort('email')}
+              >
+                <div className="flex items-center">
+                  Email
+                  <SortIndicator column="email" />
+                </div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer whitespace-nowrap"
+                onClick={() => handleSort('phone')}
+              >
+                <div className="flex items-center">
+                  Phone
+                  <SortIndicator column="phone" />
+                </div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer whitespace-nowrap"
+                onClick={() => handleSort('commissionRate')}
+              >
+                <div className="flex items-center">
+                  Commission
+                  <SortIndicator column="commissionRate" />
+                </div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer whitespace-nowrap"
+                onClick={() => handleSort('kycStatus')}
+              >
+                <div className="flex items-center">
+                  KYC Status
+                  <SortIndicator column="kycStatus" />
+                </div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer whitespace-nowrap"
+                onClick={() => handleSort('status')}
+              >
+                <div className="flex items-center">
+                  Status
+                  <SortIndicator column="status" />
+                </div>
+              </TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {currentAgents.map((agent) => (
+              <TableRow key={agent.id} className="hover:bg-muted/50">
+                <TableCell className="font-medium">{agent.userId}</TableCell>
+                <TableCell>{agent.name}</TableCell>
+                <TableCell>{agent.username}</TableCell>
+                <TableCell>{agent.email}</TableCell>
+                <TableCell>{agent.phone}</TableCell>
+                <TableCell>{agent.commissionRate}%</TableCell>
+                <TableCell>
+                  <KycStatusBadge status={agent.kycStatus} />
+                </TableCell>
+                <TableCell>
+                  <StatusBadge status={agent.status} />
+                </TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => onView(agent.id)}>
+                        <Eye className="mr-2 h-4 w-4" />
+                        View details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onEdit(agent.id)}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => onDelete(agent.id)}
+                        className="text-destructive focus:text-destructive"
+                      >
+                        <Trash className="mr-2 h-4 w-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <Pagination>
         <PaginationContent>
